@@ -168,7 +168,7 @@
         
         <!-- منطقة الخرائط (إطارات شاشة كاملة) -->
         <div class="map-container">
-            <div class="iframe-loader" id="iframeLoader">جاري تحميل البنية التحتية للخريطة الآمنة...</div>
+            <div class="iframe-loader" id="iframeLoader">جاري الاتصال الآمن بمنصة الخرائط...</div>
             <iframe id="map_arafat" src="about:blank"></iframe>
             <iframe id="map_mina" src="about:blank"></iframe>
             
@@ -223,14 +223,13 @@
     <script>
         lucide.createIcons();
 
-        // رابط شيت جوجل الخاص بك
-        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzFVlywjwchxkTqcMjncELXoXjOFa-gGtFF_xG92iC5oHK8HteD5sV4Sj_ev57H9pc9FQ/exec";
+        // ⚠️ الرابط المحدث الخاص بك
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwcDVxXIcZc1Sc8tMyh1uT1aG1T0CnpZb-zanptsnWTc0bWEXN0vecXAxSDA3FRQhXJ3g/exec";
 
-        // روابط خرائط Esri
+        // روابط خرائط Esri المباشرة (بدون توكن، الإضافة ستتولى تسجيل الدخول)
         const URL_ARAFAT = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/ef405727a5444d45846add04c2fe7e3c";
         const URL_MINA = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/cdd25be8d0a0411fbf96590836c3bf39";
 
-        let ESRI_TOKEN = ""; 
         let sessionTimer = null;
         const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 دقيقة بالملي ثانية
 
@@ -244,26 +243,20 @@
             if (savedTime) {
                 const elapsedTime = Date.now() - parseInt(savedTime);
                 if (elapsedTime < SESSION_TIMEOUT_MS) {
-                    // الجلسة لا تزال صالحة (< 15 دقيقة) - تخطي تسجيل الدخول
                     const savedUser = localStorage.getItem('haj_session_user');
                     const savedRole = localStorage.getItem('haj_session_role');
-                    const savedToken = localStorage.getItem('haj_session_token');
                     
                     if(savedUser && savedRole) {
-                        launchApp(savedUser, savedRole, savedToken);
-                        
-                        // إعادة ضبط المؤقت للوقت المتبقي من الجلسة
+                        launchApp(savedUser, savedRole);
                         const timeRemaining = SESSION_TIMEOUT_MS - elapsedTime;
                         sessionTimer = setTimeout(() => { logout(true); }, timeRemaining);
                         return;
                     }
                 } else {
-                    // الجلسة انتهت أثناء إغلاق الصفحة أو الريفرش
-                    logout(true); // true = إظهار تنبيه انتهاء الجلسة
+                    logout(true);
                     return;
                 }
             }
-            // إذا لم يكن هناك جلسة، أظهر شاشة الدخول العادية
             document.getElementById('loginOverlay').style.display = 'flex';
         }
 
@@ -280,7 +273,7 @@
             btn.style.display = 'none';
             loader.style.display = 'block';
             err.style.display = 'none';
-            err.className = 'error-msg'; // إعادة التنسيق للشكل الأحمر لو كان أصفر
+            err.className = 'error-msg'; 
 
             try {
                 const response = await fetch(`${GOOGLE_APP_URL}?action=login&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`, {
@@ -293,14 +286,12 @@
                     // حفظ الجلسة في المتصفح
                     localStorage.setItem('haj_session_user', data.username);
                     localStorage.setItem('haj_session_role', data.role);
-                    if(data.esriToken) localStorage.setItem('haj_session_token', data.esriToken);
                     localStorage.setItem('haj_session_time', Date.now());
 
-                    // بدء مؤقت 15 دقيقة
                     clearTimeout(sessionTimer);
                     sessionTimer = setTimeout(() => { logout(true); }, SESSION_TIMEOUT_MS);
 
-                    launchApp(data.username, data.role, data.esriToken);
+                    launchApp(data.username, data.role);
 
                 } else {
                     err.innerText = data.message;
@@ -315,10 +306,8 @@
             loader.style.display = 'none';
         }
 
-        // تشغيل الواجهة بعد التحقق
-        function launchApp(username, role, token) {
-            ESRI_TOKEN = token || ""; // وضع توكن Esri لو تم جلبه من الشيت
-            
+        // تشغيل الواجهة
+        function launchApp(username, role) {
             document.getElementById('displayUser').innerText = username;
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
@@ -333,29 +322,28 @@
             loadIframes();
         }
 
-        // --- حقن الروابط لتخطي شاشة Esri ---
+        // --- تحميل الإطارات ---
+        // الإضافة (Extension) هي التي ستسجل الدخول فور ظهور نافذة Esri
         function loadIframes() {
             document.getElementById('iframeLoader').style.display = 'flex';
             
-            let suffix = ESRI_TOKEN ? `?token=${ESRI_TOKEN}` : "";
             const iframeArafat = document.getElementById('map_arafat');
             const iframeMina = document.getElementById('map_mina');
 
-            iframeArafat.src = URL_ARAFAT + suffix;
-            iframeMina.src = URL_MINA + suffix;
+            // تحميل الروابط المباشرة
+            iframeArafat.src = URL_ARAFAT;
+            iframeMina.src = URL_MINA;
             
             iframeArafat.classList.add('active');
 
-            // إخفاء رسالة التحميل بعد ثواني
-            setTimeout(() => { document.getElementById('iframeLoader').style.display = 'none'; }, 2000);
+            // إعطاء وقت أطول قليلاً للإضافة لتقوم بالمصادقة (3 ثواني)
+            setTimeout(() => { document.getElementById('iframeLoader').style.display = 'none'; }, 3000);
         }
 
-        // تسجيل الخروج (أو انتهاء الجلسة)
+        // تسجيل الخروج
         function logout(isSessionExpired = false) {
-            // مسح بيانات الجلسة من المتصفح
             localStorage.removeItem('haj_session_user');
             localStorage.removeItem('haj_session_role');
-            localStorage.removeItem('haj_session_token');
             localStorage.removeItem('haj_session_time');
             clearTimeout(sessionTimer);
 
@@ -368,7 +356,6 @@
 
             const err = document.getElementById('loginError');
             if (isSessionExpired) {
-                // إظهار تنبيه انتهاء الجلسة باللون الأصفر
                 err.className = 'error-msg warning-msg';
                 err.innerText = "⏳ انتهت صلاحية الجلسة (15 دقيقة). يرجى تسجيل الدخول مجدداً لحماية البيانات.";
                 err.style.display = 'block';
