@@ -24,7 +24,7 @@
             overflow: hidden;
         }
 
-        /* منطقة الخرائط (شاشة كاملة) */
+        /* منطقة الخرائط */
         .map-container {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -43,7 +43,7 @@
         iframe.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* القائمة الجانبية العائمة (الرادار) */
+        /* القائمة الجانبية العائمة */
         .sidebar-wrapper {
             position: fixed; top: 0; right: 0; width: 60px; height: 100vh;
             z-index: 100; display: flex; align-items: center;
@@ -101,39 +101,70 @@
         .admin-dashboard.active { display: flex; }
         
         .admin-card {
-            background: #fff; width: 650px; border-radius: 20px; padding: 35px;
+            background: #fff; width: 750px; border-radius: 20px; padding: 35px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
+            position: relative;
         }
-        .admin-card h2 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;}
+        .admin-header-flex {
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 2px solid var(--accent-color); padding-bottom: 15px; margin-bottom: 20px;
+        }
+        .admin-header-flex h2 { color: var(--primary-color); margin: 0; }
+        .close-admin-btn {
+            background: #f8d7da; color: #dc3545; border: none; border-radius: 50%;
+            width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .close-admin-btn:hover { background: #dc3545; color: white; transform: rotate(90deg); }
         
         .user-row {
-            display: flex; gap: 10px; margin-bottom: 15px; align-items: center; background: #f8f9fa; padding: 12px; border-radius: 10px; border: 1px solid #e9ecef;
+            display: flex; gap: 12px; margin-bottom: 15px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px solid #e9ecef; transition: 0.3s;
         }
-        .user-row input, .user-row select { padding: 10px; border: 1px solid #ced4da; border-radius: 6px; font-family: inherit; }
+        .user-row:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: #ced4da; }
+        .user-row input, .user-row select { padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
         .user-row input[type="text"] { flex-grow: 1; font-weight: bold;}
-        .save-btn { background: var(--primary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .save-btn { background: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; gap: 5px; align-items: center; }
         .save-btn:hover { background: var(--secondary-color); }
-        .add-new-btn { background: var(--accent-color); color: #000; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; transition: 0.3s;}
+        .delete-btn { background: #ffeaea; color: #dc3545; border: 1px solid #ffc6c6; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .delete-btn:hover { background: #dc3545; color: white; }
+        .add-new-btn { background: var(--accent-color); color: #000; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 1.05rem;}
         .add-new-btn:hover { filter: brightness(0.9); }
 
-        /* شاشة تسجيل الدخول */
+        /* شاشة تسجيل الدخول والخلفية الراقية */
         #loginOverlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(135deg, rgba(0, 90, 50, 0.96) 0%, rgba(0, 30, 15, 0.98) 100%);
-            backdrop-filter: blur(15px); z-index: 1000; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(-45deg, #005A32, #003d22, #001e0f, #004d2b);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 1000; display: flex; justify-content: center; align-items: center; overflow: hidden;
         }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        #loginOverlay::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23d4af37" fill-opacity="0.04"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
+            z-index: 0; pointer-events: none;
+        }
+
         .login-box {
-            background: rgba(255, 255, 255, 0.97); padding: 45px; border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); width: 360px; text-align: center;
-            border-top: 6px solid var(--accent-color);
+            background: rgba(255, 255, 255, 0.97); padding: 50px 45px; border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6); width: 380px; text-align: center;
+            border-top: 6px solid var(--accent-color); position: relative; z-index: 1;
+            backdrop-filter: blur(10px);
         }
-        .login-box img { width: 130px; margin-bottom: 25px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+        .login-box img { width: 140px; margin-bottom: 25px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
+        .login-box h2 { color: var(--primary-color); margin-bottom: 8px; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;}
+        .login-box p.subtitle { color: #555; margin-bottom: 30px; font-size: 0.95rem; font-weight: 500; line-height: 1.4; }
+        
         .login-box input {
             width: 88%; padding: 15px 15px; margin-bottom: 18px; border: 2px solid #e9ecef; border-radius: 10px; font-family: inherit; font-size: 1rem; transition: 0.3s; background: #fdfdfd;
         }
         .login-box input:focus { outline: none; border-color: var(--primary-color); background: #fff; }
         .login-box button {
-            width: 100%; padding: 15px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 1.15rem; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 90, 50, 0.3);
+            width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 1.15rem; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 90, 50, 0.3);
         }
         .login-box button:hover { background: var(--secondary-color); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 90, 50, 0.4); }
         
@@ -143,7 +174,8 @@
         .global-loader { display: none; color: var(--primary-color); margin-top: 20px; font-weight: bold; font-size: 0.95rem; }
         
         /* لودر مبدئي فوق الخرائط */
-        .iframe-loader { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 5; display: flex; justify-content: center; align-items: center; color: white; font-size: 1.5rem; font-weight: bold; display: none; }
+        .iframe-loader { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 5; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-size: 1.5rem; font-weight: bold; display: none; }
+        .iframe-loader .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -152,13 +184,13 @@
     <div id="loginOverlay">
         <div class="login-box">
             <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار وزارة الحج والعمرة">
-            <h2 style="color: var(--primary-color); margin-bottom: 5px; font-weight: 800;">بوابة المشاعر</h2>
-            <p style="color: #666; margin-bottom: 25px; font-size: 0.95rem;">النظام المركزي الآمن لإدارة الجاهزية</p>
+            <h2>بوابة المشاعر لوزارة الحج والعمرة</h2>
+            <p class="subtitle">الخرائط التفاعلية للإدارة العامة للمشاعر المقدسة</p>
             
             <div id="loginError" class="error-msg">بيانات غير صحيحة</div>
             <input type="text" id="username" placeholder="اسم المستخدم">
             <input type="password" id="password" placeholder="كلمة المرور">
-            <button onclick="login()" id="loginBtn">تسجيل الدخول</button>
+            <button onclick="login()" id="loginBtn">تسجيل الدخول للنظام</button>
             <div id="loginLoader" class="global-loader">جاري المصادقة الآمنة وجلب الصلاحيات...</div>
         </div>
     </div>
@@ -166,21 +198,31 @@
     <!-- الحاوية الرئيسية بعد الدخول -->
     <div id="mainApp" style="display: none;">
         
-        <!-- منطقة الخرائط (إطارات شاشة كاملة) -->
+        <!-- منطقة الخرائط -->
         <div class="map-container">
-            <div class="iframe-loader" id="iframeLoader">جاري الاتصال الآمن بمنصة الخرائط...</div>
+            <div class="iframe-loader" id="iframeLoader">
+                <div class="spinner"></div>
+                <div>جاري الاتصال الآمن بمنصة الخرائط...</div>
+            </div>
             <iframe id="map_arafat" src="about:blank"></iframe>
             <iframe id="map_mina" src="about:blank"></iframe>
             
-            <!-- لوحة تحكم الآدمن -->
+            <!-- لوحة تحكم الآدمن المحدثة -->
             <div id="admin_panel" class="admin-dashboard">
                 <div class="admin-card">
-                    <h2>إدارة حسابات النظام (لوحة المدير)</h2>
-                    <p style="color: #666; font-size: 0.9rem; margin-bottom: 20px;">قم بتعديل أو إضافة مستخدمين (سيتم الحفظ والمزامنة مباشرة مع شيت جوجل).</p>
-                    <div id="usersList">
-                        <div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين من قاعدة البيانات...</div>
+                    <div class="admin-header-flex">
+                        <h2><i data-lucide="shield-alert" style="vertical-align: middle; margin-left: 5px;"></i> لوحة إدارة الصلاحيات</h2>
+                        <button class="close-admin-btn" title="إغلاق والعودة للخريطة" onclick="document.querySelectorAll('.menu-btn')[0].click()">
+                            <i data-lucide="x"></i>
+                        </button>
                     </div>
-                    <button class="add-new-btn" onclick="addNewUserRow()"><i data-lucide="user-plus" style="width: 18px; height: 18px; vertical-align: middle;"></i> إضافة مستخدم جديد للنظام</button>
+                    <p style="color: #666; font-size: 0.95rem; margin-bottom: 25px;">قم بتعديل، إضافة، أو حذف المستخدمين (سيتم التحديث فوراً في قاعدة البيانات المركزية).</p>
+                    
+                    <div id="usersList">
+                        <div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين...</div>
+                    </div>
+                    
+                    <button class="add-new-btn" onclick="addNewUserRow()"><i data-lucide="user-plus"></i> إضافة مستخدم جديد للنظام</button>
                 </div>
             </div>
         </div>
@@ -195,19 +237,18 @@
                 <div class="logo-area">
                     <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار">
                     <h2>المركز الموحد</h2>
-                    <p>إدارة المشاعر المقدسة</p>
+                    <p>الإدارة العامة للمشاعر</p>
                 </div>
 
                 <div class="menu-items">
                     <button class="menu-btn active" onclick="openScreen('map_arafat', this)">
-                        <i data-lucide="map"></i> لوحة جاهزية عرفات
+                        <i data-lucide="map"></i> خريطة جاهزية عرفات
                     </button>
                     <button class="menu-btn" onclick="openScreen('map_mina', this)">
-                        <i data-lucide="map-pin"></i> لوحة جاهزية منى
+                        <i data-lucide="map-pin"></i> خريطة جاهزية منى
                     </button>
-                    <!-- زر الإدارة -->
-                    <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.3);" onclick="openScreen('admin_panel', this)">
-                        <i data-lucide="users"></i> إدارة الحسابات
+                    <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.4);" onclick="openScreen('admin_panel', this)">
+                        <i data-lucide="users"></i> إدارة المستخدمين
                     </button>
                 </div>
 
@@ -223,17 +264,27 @@
     <script>
         lucide.createIcons();
 
-        // ⚠️ الرابط المحدث الخاص بك
-        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbwcDVxXIcZc1Sc8tMyh1uT1aG1T0CnpZb-zanptsnWTc0bWEXN0vecXAxSDA3FRQhXJ3g/exec";
+        // ⚠️ رابط شيت جوجل المحدث
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzYBQ5WAGrAVE-uLKbCuUnVQGfO6FM0t5v4Oo4Q3ar9LlkdNRvixrnVKMUFNz-zsgTWvQ/exec";
 
-        // روابط خرائط Esri المباشرة (بدون توكن، الإضافة ستتولى تسجيل الدخول)
         const URL_ARAFAT = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/ef405727a5444d45846add04c2fe7e3c";
         const URL_MINA = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/cdd25be8d0a0411fbf96590836c3bf39";
 
         let sessionTimer = null;
-        const SESSION_TIMEOUT_MS = 15 * 60 * 1000; // 15 دقيقة بالملي ثانية
+        const SESSION_TIMEOUT_MS = 15 * 60 * 1000; 
 
-        // --- عند تحميل الصفحة: فحص الجلسة السابقة ---
+        // --- نظام المصافحة السرية للإضافة (Ghost Extension Auth) ---
+        // يبث شفرة سرية مشفرة للإطارات لتعمل الإضافة حصرياً من هنا
+        setInterval(() => {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if(iframe.contentWindow) {
+                    iframe.contentWindow.postMessage("EUROCONSULT_GHOST_2026", "*");
+                }
+            });
+        }, 1000);
+
+        // --- فحص الجلسة ---
         document.addEventListener('DOMContentLoaded', () => {
             checkActiveSession();
         });
@@ -260,7 +311,6 @@
             document.getElementById('loginOverlay').style.display = 'flex';
         }
 
-        // --- نظام تسجيل الدخول عبر جوجل شيت ---
         async function login() {
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
@@ -283,7 +333,6 @@
                 const data = await response.json();
 
                 if (data.status === 'success') {
-                    // حفظ الجلسة في المتصفح
                     localStorage.setItem('haj_session_user', data.username);
                     localStorage.setItem('haj_session_role', data.role);
                     localStorage.setItem('haj_session_time', Date.now());
@@ -306,7 +355,6 @@
             loader.style.display = 'none';
         }
 
-        // تشغيل الواجهة
         function launchApp(username, role) {
             document.getElementById('displayUser').innerText = username;
             document.getElementById('loginOverlay').style.display = 'none';
@@ -322,25 +370,18 @@
             loadIframes();
         }
 
-        // --- تحميل الإطارات ---
-        // الإضافة (Extension) هي التي ستسجل الدخول فور ظهور نافذة Esri
         function loadIframes() {
             document.getElementById('iframeLoader').style.display = 'flex';
-            
             const iframeArafat = document.getElementById('map_arafat');
             const iframeMina = document.getElementById('map_mina');
 
-            // تحميل الروابط المباشرة
             iframeArafat.src = URL_ARAFAT;
             iframeMina.src = URL_MINA;
-            
             iframeArafat.classList.add('active');
 
-            // إعطاء وقت أطول قليلاً للإضافة لتقوم بالمصادقة (3 ثواني)
-            setTimeout(() => { document.getElementById('iframeLoader').style.display = 'none'; }, 3000);
+            setTimeout(() => { document.getElementById('iframeLoader').style.display = 'none'; }, 4000);
         }
 
-        // تسجيل الخروج
         function logout(isSessionExpired = false) {
             localStorage.removeItem('haj_session_user');
             localStorage.removeItem('haj_session_role');
@@ -364,19 +405,22 @@
             }
         }
 
-        // --- التنقل بين الشاشات ---
         function openScreen(screenId, btnObj) {
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            btnObj.classList.add('active');
+            if(btnObj) btnObj.classList.add('active');
 
             document.getElementById('map_arafat').classList.remove('active');
             document.getElementById('map_mina').classList.remove('active');
             document.getElementById('admin_panel').classList.remove('active');
 
             document.getElementById(screenId).classList.add('active');
+            
+            if(screenId !== 'admin_panel' && lucide) {
+                lucide.createIcons();
+            }
         }
 
-        // --- إدارة حسابات المستخدمين والمزامنة مع جوجل شيت ---
+        // --- إدارة حسابات المستخدمين ---
         async function loadUsersFromSheet() {
             const listDiv = document.getElementById('usersList');
             listDiv.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين من قاعدة البيانات...</div>';
@@ -387,6 +431,7 @@
                 if(data.status === 'success') {
                     listDiv.innerHTML = '';
                     data.data.forEach(u => renderUserRow(u.username, u.password, u.role, listDiv));
+                    lucide.createIcons();
                 }
             } catch (e) {
                 listDiv.innerHTML = '<p style="color:red; text-align:center; font-weight:bold;">حدث خطأ أثناء الاتصال بشيت جوجل</p>';
@@ -396,14 +441,17 @@
         function renderUserRow(user, pass, role, container) {
             const row = document.createElement('div');
             row.className = 'user-row';
+            const isAdmin = user === 'admin';
+            
             row.innerHTML = `
-                <input type="text" value="${user}" placeholder="اسم المستخدم" ${user==='admin' ? 'readonly title="لا يمكن تغيير اسم الآدمن الأساسي"' : ''} style="background: ${user==='admin'? '#e9ecef': '#fff'};">
-                <input type="text" value="${pass}" placeholder="كلمة المرور الجديدة">
-                <select ${user==='admin' ? 'disabled' : ''}>
-                    <option value="user" ${role !== 'admin' ? 'selected' : ''}>مستخدم عادي (خرائط فقط)</option>
-                    <option value="admin" ${role === 'admin' ? 'selected' : ''}>مدير نظام (صلاحيات كاملة)</option>
+                <input type="text" value="${user}" placeholder="اسم المستخدم" ${isAdmin ? 'readonly title="لا يمكن تغيير اسم الآدمن الأساسي"' : ''} style="background: ${isAdmin ? '#e9ecef': '#fff'}; width: 30%;">
+                <input type="text" value="${pass}" placeholder="كلمة المرور الجديدة" style="width: 30%;">
+                <select ${isAdmin ? 'disabled' : ''} style="flex-grow: 1;">
+                    <option value="user" ${role !== 'admin' ? 'selected' : ''}>مستخدم عادي</option>
+                    <option value="admin" ${role === 'admin' ? 'selected' : ''}>مدير نظام</option>
                 </select>
-                <button class="save-btn" onclick="saveUserToSheet(this)">حفظ وتحديث</button>
+                <button class="save-btn" title="حفظ التعديلات" onclick="saveUserToSheet(this)"><i data-lucide="save"></i></button>
+                ${!isAdmin ? `<button class="delete-btn" title="حذف هذا المستخدم" onclick="deleteUserFromSheet(this)"><i data-lucide="trash-2"></i></button>` : `<div style="width:44px;"></div>`}
             `;
             container.appendChild(row);
         }
@@ -411,6 +459,7 @@
         function addNewUserRow() {
             const listDiv = document.getElementById('usersList');
             renderUserRow('', '', 'user', listDiv);
+            lucide.createIcons();
             listDiv.lastElementChild.scrollIntoView({ behavior: 'smooth' });
         }
 
@@ -420,13 +469,10 @@
             const pass = row.children[1].value.trim();
             const role = row.children[2].value;
 
-            if(!user || !pass) {
-                alert("يرجى إدخال اسم مستخدم وكلمة مرور صالحة");
-                return;
-            }
+            if(!user || !pass) { alert("يرجى إدخال اسم مستخدم وكلمة مرور صالحة"); return; }
 
-            const originalText = btnElement.innerText;
-            btnElement.innerText = "جاري الحفظ...";
+            const originalHTML = btnElement.innerHTML;
+            btnElement.innerHTML = `<i data-lucide="loader" class="spinner"></i>`;
             btnElement.disabled = true;
 
             try {
@@ -439,22 +485,56 @@
                 const data = await response.json();
                 
                 if(data.status === 'success') {
-                    btnElement.innerText = "تم الحفظ بنجاح ✓";
+                    btnElement.innerHTML = `<i data-lucide="check"></i>`;
                     btnElement.style.background = "#28a745";
                     setTimeout(() => {
-                        btnElement.innerText = originalText;
+                        btnElement.innerHTML = originalHTML;
                         btnElement.style.background = "var(--primary-color)";
                         btnElement.disabled = false;
+                        lucide.createIcons();
                     }, 2000);
                 }
             } catch (e) {
-                alert("فشل في الاتصال بجوجل شيت لحفظ البيانات، يرجى المحاولة مرة أخرى.");
-                btnElement.innerText = originalText;
+                alert("فشل في الحفظ!");
+                btnElement.innerHTML = originalHTML;
                 btnElement.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        async function deleteUserFromSheet(btnElement) {
+            const row = btnElement.parentElement;
+            const user = row.children[0].value.trim();
+
+            if(!user) { row.remove(); return; }
+
+            if(!confirm(`هل أنت متأكد من حذف المستخدم (${user}) نهائياً؟`)) return;
+
+            const originalHTML = btnElement.innerHTML;
+            btnElement.innerHTML = `<i data-lucide="loader" class="spinner"></i>`;
+            btnElement.disabled = true;
+
+            try {
+                const response = await fetch(GOOGLE_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'deleteUser', username: user }),
+                    redirect: "follow"
+                });
+                const data = await response.json();
+                
+                if(data.status === 'success') {
+                    row.style.opacity = '0';
+                    setTimeout(() => row.remove(), 300);
+                }
+            } catch (e) {
+                alert("فشل في حذف المستخدم!");
+                btnElement.innerHTML = originalHTML;
+                btnElement.disabled = false;
+                lucide.createIcons();
             }
         }
         
-        // الدخول بزر Enter
         document.getElementById("password").addEventListener("keypress", function(event) {
           if (event.key === "Enter") {
             event.preventDefault();
