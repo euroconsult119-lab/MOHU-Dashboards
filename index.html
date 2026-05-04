@@ -92,7 +92,7 @@
         }
         .logout-btn:hover { background: #dc3545; }
 
-        /* شاشة إدارة الحسابات للآدمن */
+        /* شاشات الإدارة (آدمن + حسابي) */
         .admin-dashboard {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
@@ -130,7 +130,7 @@
         .add-new-btn { background: var(--accent-color); color: #000; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 1.05rem;}
         .add-new-btn:hover { filter: brightness(0.9); }
 
-        /* شاشة تسجيل الدخول والخلفية الراقية */
+        /* شاشة تسجيل الدخول للخلفية */
         #loginOverlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(-45deg, #005A32, #003d22, #001e0f, #004d2b);
@@ -207,7 +207,34 @@
             <iframe id="map_arafat" src="about:blank"></iframe>
             <iframe id="map_mina" src="about:blank"></iframe>
             
-            <!-- لوحة تحكم الآدمن المحدثة -->
+            <!-- لوحة إعدادات الحساب (لجميع المستخدمين) -->
+            <div id="profile_panel" class="admin-dashboard">
+                <div class="admin-card" style="width: 500px;">
+                    <div class="admin-header-flex">
+                        <h2><i data-lucide="user-cog" style="vertical-align: middle; margin-left: 5px;"></i> إعدادات حسابي</h2>
+                        <button class="close-admin-btn" title="إغلاق والعودة للخريطة" onclick="document.querySelectorAll('.menu-btn')[0].click()">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                    <p style="color: #666; font-size: 0.95rem; margin-bottom: 25px;">يمكنك تعديل اسم المستخدم الخاص بك أو تغيير كلمة المرور لتأمين حسابك.</p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div>
+                            <label style="display:block; margin-bottom:8px; font-weight:bold; color: var(--primary-color);">اسم المستخدم (تسجيل الدخول):</label>
+                            <input type="text" id="profile_username" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">
+                        </div>
+                        <div>
+                            <label style="display:block; margin-bottom:8px; font-weight:bold; color: var(--primary-color);">كلمة المرور الجديدة:</label>
+                            <input type="text" id="profile_password" placeholder="أدخل كلمة مرور قوية" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">
+                        </div>
+                        <button class="save-btn" id="saveProfileBtn" onclick="updateMyProfile()" style="justify-content: center; margin-top: 15px; width: 100%; font-size: 1.1rem; padding: 14px;">
+                            <i data-lucide="save"></i> حفظ التحديثات
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- لوحة تحكم الآدمن -->
             <div id="admin_panel" class="admin-dashboard">
                 <div class="admin-card">
                     <div class="admin-header-flex">
@@ -247,6 +274,15 @@
                     <button class="menu-btn" onclick="openScreen('map_mina', this)">
                         <i data-lucide="map-pin"></i> خريطة جاهزية منى
                     </button>
+                    
+                    <hr style="border-color: rgba(255,255,255,0.1); width: 100%; margin: 5px 0;">
+
+                    <!-- زر إعدادات الحساب (متاح للجميع) -->
+                    <button class="menu-btn" onclick="openScreen('profile_panel', this)">
+                        <i data-lucide="user-cog"></i> إعدادات حسابي
+                    </button>
+
+                    <!-- زر الإدارة (للآدمن فقط) -->
                     <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.4);" onclick="openScreen('admin_panel', this)">
                         <i data-lucide="users"></i> إدارة المستخدمين
                     </button>
@@ -264,17 +300,14 @@
     <script>
         lucide.createIcons();
 
-        // ⚠️ رابط شيت جوجل المحدث
-        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzYBQ5WAGrAVE-uLKbCuUnVQGfO6FM0t5v4Oo4Q3ar9LlkdNRvixrnVKMUFNz-zsgTWvQ/exec";
-
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbzQdTsfYFOGOdTWTkAUYaDnW7eworvB_9zey-5apwXp_tNq8ZyFoN25cvRVdde_ejW6Hg/exec";
         const URL_ARAFAT = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/ef405727a5444d45846add04c2fe7e3c";
         const URL_MINA = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/cdd25be8d0a0411fbf96590836c3bf39";
 
         let sessionTimer = null;
         const SESSION_TIMEOUT_MS = 15 * 60 * 1000; 
 
-        // --- نظام المصافحة السرية للإضافة (Ghost Extension Auth) ---
-        // يبث شفرة سرية مشفرة للإطارات لتعمل الإضافة حصرياً من هنا
+        // --- نظام المصافحة السرية للإضافة ---
         setInterval(() => {
             const iframes = document.querySelectorAll('iframe');
             iframes.forEach(iframe => {
@@ -359,6 +392,10 @@
             document.getElementById('displayUser').innerText = username;
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
+            
+            // تعبئة بيانات شاشة إعدادات الحساب
+            document.getElementById('profile_username').value = username;
+            document.getElementById('profile_password').value = ""; // تفريغ حقل الباسورد
 
             if(role === 'admin') {
                 document.getElementById('btnAdmin').style.display = 'flex';
@@ -412,15 +449,75 @@
             document.getElementById('map_arafat').classList.remove('active');
             document.getElementById('map_mina').classList.remove('active');
             document.getElementById('admin_panel').classList.remove('active');
+            document.getElementById('profile_panel').classList.remove('active');
 
             document.getElementById(screenId).classList.add('active');
             
-            if(screenId !== 'admin_panel' && lucide) {
+            if(screenId !== 'admin_panel' && screenId !== 'profile_panel' && lucide) {
                 lucide.createIcons();
             }
         }
 
-        // --- إدارة حسابات المستخدمين ---
+        // --- تحديث إعدادات حسابي (للمستخدم العادي والآدمن) ---
+        async function updateMyProfile() {
+            const newUsername = document.getElementById('profile_username').value.trim();
+            const newPassword = document.getElementById('profile_password').value.trim();
+            const oldUsername = localStorage.getItem('haj_session_user');
+            const role = localStorage.getItem('haj_session_role');
+
+            if(!newUsername || !newPassword) { 
+                alert("يرجى إدخال اسم المستخدم وكلمة المرور الجديدة!"); 
+                return; 
+            }
+            if(oldUsername === 'admin' && newUsername !== 'admin') {
+                alert("لا يمكن تغيير اسم المستخدم الخاص بالآدمن الأساسي للحفاظ على استقرار النظام!");
+                document.getElementById('profile_username').value = 'admin';
+                return;
+            }
+
+            const btn = document.getElementById('saveProfileBtn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<i data-lucide="loader" class="spinner"></i> جاري الحفظ...`;
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(GOOGLE_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'updateProfile', oldUsername: oldUsername, newUsername: newUsername, newPassword: newPassword, role: role }),
+                    redirect: "follow"
+                });
+                const data = await response.json();
+                
+                if(data.status === 'success') {
+                    btn.innerHTML = `<i data-lucide="check"></i> تم التحديث بنجاح`;
+                    btn.style.background = "#28a745";
+                    
+                    // تحديث الجلسة والواجهة إذا قام بتغيير اسمه
+                    localStorage.setItem('haj_session_user', newUsername);
+                    document.getElementById('displayUser').innerText = newUsername;
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                        btn.style.background = "var(--primary-color)";
+                        btn.disabled = false;
+                        lucide.createIcons();
+                    }, 2000);
+                } else {
+                    alert(data.message || "حدث خطأ أثناء الحفظ!");
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    lucide.createIcons();
+                }
+            } catch (e) {
+                alert("فشل في الاتصال بالسيرفر!");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                lucide.createIcons();
+            }
+        }
+
+        // --- إدارة حسابات المستخدمين (الآدمن) ---
         async function loadUsersFromSheet() {
             const listDiv = document.getElementById('usersList');
             listDiv.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين من قاعدة البيانات...</div>';
