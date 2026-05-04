@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة المشاعر المقدسة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <!-- استخدام أيقونات Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-color: #005A32;
+            --secondary-color: #003d22;
+            --accent-color: #d4af37;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Tajawal', sans-serif;
+            background: #111; /* خلفية داكنة قبل تحميل الصور */
+            height: 100vh; width: 100vw;
+            overflow: hidden;
+        }
+
+        /* 1. منطقة الخرائط (شاشة كاملة) */
+        .map-container {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1590393275627-0c484ea237a3?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            z-index: 1;
+        }
+
+        iframe {
+            width: 100%; height: 100%;
+            border: none;
+            display: none;
+        }
+
+        iframe.active {
+            display: block;
+        }
+
+        /* 2. القائمة الجانبية العائمة (الرادار) */
+        .sidebar-wrapper {
+            position: fixed;
+            top: 0; right: 0;
+            width: 50px; /* الجزء الظاهر لاستشعار الماوس */
+            height: 100vh;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar {
+            position: absolute;
+            top: 10px; bottom: 10px; right: -320px; /* مخفية مبدئياً */
+            width: 300px;
+            background: rgba(0, 50, 25, 0.85); /* زجاجي أخضر داكن */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--accent-color);
+            border-right: none;
+            border-radius: 20px 0 0 20px;
+            box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            overflow-y: auto;
+        }
+
+        /* عند تمرير الماوس تظهر القائمة */
+        .sidebar-wrapper:hover .sidebar, .sidebar.open {
+            right: 0;
+        }
+
+        /* التلميح البصري الجانبي */
+        .sidebar-hint {
+            position: absolute;
+            right: 0;
+            background: rgba(0,0,0,0.5);
+            color: var(--accent-color);
+            padding: 20px 5px;
+            border-radius: 10px 0 0 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: opacity 0.3s;
+        }
+        .sidebar-wrapper:hover .sidebar-hint { opacity: 0; pointer-events: none; }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        .logo-area img { width: 80px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); margin-bottom: 10px;}
+        .logo-area h2 { color: white; font-size: 1.2rem; margin: 10px 0 5px 0; }
+        .logo-area p { color: var(--accent-color); font-size: 0.9rem; margin: 0; }
+
+        .menu-items {
+            display: flex; flex-direction: column; gap: 10px; padding: 0 15px; flex-grow: 1;
+        }
+
+        .menu-btn {
+            background: transparent;
+            color: white; border: 1px solid transparent;
+            padding: 12px 15px; border-radius: 10px; font-size: 1.1rem;
+            text-align: right; display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: all 0.3s; font-family: inherit;
+        }
+        .menu-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .menu-btn.active {
+            background: rgba(212, 175, 55, 0.2); border-color: var(--accent-color);
+            color: var(--accent-color); font-weight: bold;
+        }
+
+        .user-panel {
+            padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px;
+        }
+        .user-panel p { color: white; margin: 0 0 10px 0; font-size: 0.95rem; }
+        .logout-btn {
+            width: 100%; background: #dc3545; color: white; border: none; padding: 10px;
+            border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: bold; display: flex; justify-content: center; gap: 8px;
+            transition: opacity 0.3s;
+        }
+        .logout-btn:hover { opacity: 0.8; }
+
+        /* 3. شاشة إدارة الحسابات للآدمن */
+        .admin-dashboard {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(15px);
+            z-index: 50; display: none; justify-content: center; align-items: center;
+        }
+        .admin-dashboard.active { display: flex; }
+        
+        .admin-card {
+            background: rgba(255, 255, 255, 0.95); width: 600px; border-radius: 20px;
+            padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-height: 90vh; overflow-y: auto;
+        }
+        .admin-card h2 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px;}
+        
+        .user-row {
+            display: flex; gap: 10px; margin-bottom: 15px; align-items: center;
+            background: #f4f6f9; padding: 10px; border-radius: 8px; border: 1px solid #ddd;
+        }
+        .user-row input, .user-row select {
+            padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-family: inherit;
+        }
+        .user-row input[type="text"] { flex-grow: 1; font-weight: bold;}
+        .save-btn { background: var(--primary-color); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .save-btn:hover { background: var(--secondary-color); }
+        .add-new-btn { background: var(--accent-color); color: #000; border: none; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; transition: 0.3s;}
+        .add-new-btn:hover { filter: brightness(0.9); }
+
+        /* 4. شاشة تسجيل الدخول */
+        #loginOverlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(135deg, rgba(0, 90, 50, 0.95) 0%, rgba(0, 30, 15, 0.98) 100%);
+            backdrop-filter: blur(10px); z-index: 1000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .login-box {
+            background: rgba(255, 255, 255, 0.95); padding: 40px; border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); width: 350px; text-align: center;
+            border-top: 5px solid var(--accent-color);
+        }
+        .login-box img { width: 120px; margin-bottom: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .login-box input {
+            width: 88%; padding: 14px 15px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; font-size: 1rem;
+        }
+        .login-box button {
+            width: 100%; padding: 14px; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-family: inherit; font-weight: bold; transition: background 0.3s;
+        }
+        .login-box button:hover { background: var(--secondary-color); }
+        .error-msg { background: #ffeaea; color: #dc3545; padding: 10px; border-radius: 8px; display: none; margin-bottom: 15px; font-weight: bold; font-size: 0.9rem;}
+        
+        .global-loader { display: none; color: var(--accent-color); margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginOverlay">
+        <div class="login-box">
+            <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار وزارة الحج والعمرة">
+            <h2 style="color: var(--primary-color); margin-bottom: 5px;">بوابة المشاعر</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 0.9rem;">أدخل بيانات الاعتماد للصلاحية</p>
+            
+            <div id="loginError" class="error-msg">بيانات غير صحيحة</div>
+            <input type="text" id="username" placeholder="اسم المستخدم (مثال: admin)">
+            <input type="password" id="password" placeholder="كلمة المرور (مثال: 123456)">
+            <button onclick="login()" id="loginBtn">تسجيل الدخول</button>
+            <div id="loginLoader" class="global-loader">جاري التحقق من قاعدة البيانات...</div>
+        </div>
+    </div>
+
+    <!-- الحاوية الرئيسية بعد الدخول -->
+    <div id="mainApp" style="display: none;">
+        
+        <!-- منطقة الخرائط (إطارات شاشة كاملة) -->
+        <div class="map-container">
+            <iframe id="map_arafat" src="about:blank"></iframe>
+            <iframe id="map_mina" src="about:blank"></iframe>
+            <div id="admin_panel" class="admin-dashboard">
+                <div class="admin-card">
+                    <h2>إدارة حسابات النظام (لوحة المدير)</h2>
+                    <p style="color: #666; font-size: 0.9rem;">قم بتعديل أو إضافة مستخدمين (سيتم الحفظ والمزامنة مباشرة مع شيت جوجل).</p>
+                    <div id="usersList">
+                        <div style="text-align:center; padding: 20px; font-weight: bold;">جاري جلب المستخدمين من قاعدة البيانات...</div>
+                    </div>
+                    <button class="add-new-btn" onclick="addNewUserRow()">+ إضافة مستخدم جديد للنظام</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- القائمة الجانبية العائمة -->
+        <div class="sidebar-wrapper">
+            <div class="sidebar-hint">
+                <i data-lucide="chevron-left"></i>
+                <span style="writing-mode: vertical-rl; font-weight: bold; letter-spacing: 5px;">القائمة</span>
+            </div>
+            <div class="sidebar">
+                <div class="logo-area">
+                    <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار وزارة الحج">
+                    <h2>المركز الموحد</h2>
+                    <p>إدارة المشاعر المقدسة</p>
+                </div>
+
+                <div class="menu-items">
+                    <button class="menu-btn active" onclick="openScreen('map_arafat', this)">
+                        <i data-lucide="map"></i> لوحة جاهزية عرفات
+                    </button>
+                    <button class="menu-btn" onclick="openScreen('map_mina', this)">
+                        <i data-lucide="map-pin"></i> لوحة جاهزية منى
+                    </button>
+                    <!-- زر الإدارة يظهر للآدمن فقط -->
+                    <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.3);" onclick="openScreen('admin_panel', this)">
+                        <i data-lucide="users"></i> إدارة الحسابات
+                    </button>
+                </div>
+
+                <div class="user-panel">
+                    <p><i data-lucide="user-circle"></i> مرحباً، <b id="displayUser"></b></p>
+                    <button class="logout-btn" onclick="logout()"><i data-lucide="log-out"></i> تسجيل خروج</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ✅ تم ربط البوابة بتطبيق جوجل سكريبت الخاص بك ✅
+        const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbxL9pSK8WMipX4YKun9QB606VDYthIiZxiyhM4ydKZ3-dfkzQnTj6uNNH0SU7j-z0RnAQ/exec";
+
+        // روابط الداشبورد الأساسية الخاصة بوزارة الحج
+        const URL_ARAFAT = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/ef405727a5444d45846add04c2fe7e3c";
+        const URL_MINA = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/cdd25be8d0a0411fbf96590836c3bf39";
+
+        // 💡 لتخطي شاشة الدخول في ArcGIS: 
+        // احصل على توكن (طويل الأمد) وضعه هنا، سيقوم النظام بدمجه تلقائياً.
+        const ESRI_TOKEN = ""; 
+
+        let currentUserRole = '';
+
+        // --- نظام تسجيل الدخول عبر جوجل شيت ---
+        async function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn');
+            const loader = document.getElementById('loginLoader');
+            const err = document.getElementById('loginError');
+
+            if(!user || !pass) return;
+
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            err.style.display = 'none';
+
+            try {
+                // الاتصال بشيت جوجل للتحقق
+                const response = await fetch(`${GOOGLE_APP_URL}?action=login&username=${encodeURIComponent(user)}&password=${encodeURIComponent(pass)}`, {
+                    method: "GET",
+                    redirect: "follow"
+                });
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // نجاح الدخول
+                    currentUserRole = data.role;
+                    document.getElementById('displayUser').innerText = data.username;
+                    
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+
+                    // إظهار زر الإدارة إذا كان آدمن
+                    if(currentUserRole === 'admin') {
+                        document.getElementById('btnAdmin').style.display = 'flex';
+                        loadUsersFromSheet(); // تحميل بيانات الإدارة من جوجل شيت
+                    } else {
+                        document.getElementById('btnAdmin').style.display = 'none';
+                    }
+
+                    loadIframes();
+
+                } else {
+                    err.innerText = data.message;
+                    err.style.display = 'block';
+                }
+            } catch (error) {
+                err.innerText = "حدث خطأ في الاتصال بقاعدة البيانات (جوجل شيت)";
+                err.style.display = 'block';
+            }
+
+            btn.style.display = 'block';
+            loader.style.display = 'none';
+        }
+
+        // --- حقن الروابط لتخطي شاشة Esri ---
+        function loadIframes() {
+            let suffix = ESRI_TOKEN ? `?token=${ESRI_TOKEN}` : "";
+            document.getElementById('map_arafat').src = URL_ARAFAT + suffix;
+            document.getElementById('map_mina').src = URL_MINA + suffix;
+            document.getElementById('map_arafat').classList.add('active');
+        }
+
+        function logout() {
+            document.getElementById('mainApp').style.display = 'none';
+            document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('password').value = '';
+            currentUserRole = '';
+            document.getElementById('map_arafat').src = "about:blank";
+            document.getElementById('map_mina').src = "about:blank";
+        }
+
+        // --- التنقل بين الشاشات ---
+        function openScreen(screenId, btnObj) {
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            btnObj.classList.add('active');
+
+            document.getElementById('map_arafat').classList.remove('active');
+            document.getElementById('map_mina').classList.remove('active');
+            document.getElementById('admin_panel').classList.remove('active');
+
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // --- إدارة حسابات المستخدمين والمزامنة مع جوجل شيت ---
+        async function loadUsersFromSheet() {
+            const listDiv = document.getElementById('usersList');
+            listDiv.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold;">جاري جلب المستخدمين من قاعدة البيانات...</div>';
+            try {
+                const response = await fetch(`${GOOGLE_APP_URL}?action=getUsers`, { redirect: "follow" });
+                const data = await response.json();
+
+                if(data.status === 'success') {
+                    listDiv.innerHTML = '';
+                    data.data.forEach(u => renderUserRow(u.username, u.password, u.role, listDiv));
+                }
+            } catch (e) {
+                listDiv.innerHTML = '<p style="color:red; text-align:center; font-weight:bold;">حدث خطأ أثناء الاتصال بشيت جوجل</p>';
+            }
+        }
+
+        function renderUserRow(user, pass, role, container) {
+            const row = document.createElement('div');
+            row.className = 'user-row';
+            row.innerHTML = `
+                <input type="text" value="${user}" placeholder="اسم المستخدم" ${user==='admin' ? 'readonly title="لا يمكن تغيير اسم الآدمن الأساسي"' : ''} style="background: ${user==='admin'? '#e9ecef': '#fff'};">
+                <input type="text" value="${pass}" placeholder="كلمة المرور الجديدة">
+                <select ${user==='admin' ? 'disabled' : ''}>
+                    <option value="user" ${role !== 'admin' ? 'selected' : ''}>مستخدم عادي (خرائط فقط)</option>
+                    <option value="admin" ${role === 'admin' ? 'selected' : ''}>مدير نظام (صلاحيات كاملة)</option>
+                </select>
+                <button class="save-btn" onclick="saveUserToSheet(this)">حفظ وتحديث</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function addNewUserRow() {
+            const listDiv = document.getElementById('usersList');
+            renderUserRow('', '', 'user', listDiv);
+            listDiv.lastElementChild.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function saveUserToSheet(btnElement) {
+            const row = btnElement.parentElement;
+            const user = row.children[0].value.trim();
+            const pass = row.children[1].value.trim();
+            const role = row.children[2].value;
+
+            if(!user || !pass) {
+                alert("يرجى إدخال اسم مستخدم وكلمة مرور صالحة");
+                return;
+            }
+
+            const originalText = btnElement.innerText;
+            btnElement.innerText = "جاري الحفظ...";
+            btnElement.disabled = true;
+
+            try {
+                // استخدام POST مع text/plain لتفادي مشاكل الـ CORS في متصفحات كروم مع جوجل سكريبت
+                const response = await fetch(GOOGLE_APP_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'saveUser', username: user, password: pass, role: role }),
+                    redirect: "follow"
+                });
+                const data = await response.json();
+                
+                if(data.status === 'success') {
+                    btnElement.innerText = "تم الحفظ بنجاح ✓";
+                    btnElement.style.background = "#28a745";
+                    setTimeout(() => {
+                        btnElement.innerText = originalText;
+                        btnElement.style.background = "var(--primary-color)";
+                        btnElement.disabled = false;
+                    }, 2000);
+                }
+            } catch (e) {
+                alert("فشل في الاتصال بجوجل شيت لحفظ البيانات، يرجى المحاولة مرة أخرى.");
+                btnElement.innerText = originalText;
+                btnElement.disabled = false;
+            }
+        }
+        
+        // إتاحة الدخول عبر زر Enter
+        document.getElementById("password").addEventListener("keypress", function(event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            document.getElementById("loginBtn").click();
+          }
+        });
+    </script>
+</body>
+</html>
