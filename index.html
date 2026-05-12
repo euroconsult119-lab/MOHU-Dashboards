@@ -39,7 +39,7 @@
 
         /* القائمة الجانبية العائمة */
         .sidebar-wrapper { position: fixed; top: 0; right: 0; width: 60px; height: 100vh; z-index: 100; display: flex; align-items: center; }
-        .sidebar { position: absolute; top: 15px; bottom: 15px; right: -320px; width: 300px; background: rgba(0, 69, 67, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(212, 175, 55, 0.3); border-right: none; border-radius: 20px 0 0 20px; box-shadow: -10px 0 40px rgba(0,0,0,0.6); transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding: 20px 0; overflow-y: auto; }
+        .sidebar { position: absolute; top: 15px; bottom: 15px; right: -420px; width: 400px; background: rgba(0, 69, 67, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(212, 175, 55, 0.3); border-right: none; border-radius: 20px 0 0 20px; box-shadow: -10px 0 40px rgba(0,0,0,0.6); transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding: 20px 0; overflow-y: auto; }
         .sidebar-wrapper:hover .sidebar, .sidebar.open { right: 0; }
         .sidebar-hint { position: absolute; right: 0; background: rgba(0, 69, 67, 0.8); color: var(--accent-color); padding: 25px 8px; border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: opacity 0.3s; box-shadow: -2px 0 10px rgba(0,0,0,0.3); }
         .sidebar-wrapper:hover .sidebar-hint { opacity: 0; pointer-events: none; }
@@ -50,7 +50,7 @@
         .logo-area p { color: var(--accent-color); font-size: 0.9rem; margin: 0; }
 
         .menu-items { display: flex; flex-direction: column; gap: 12px; padding: 0 15px; flex-grow: 1; }
-        .menu-btn { background: rgba(255,255,255,0.03); color: white; border: 1px solid rgba(255,255,255,0.05); padding: 14px 15px; border-radius: 12px; font-size: 1.05rem; text-align: right; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; font-family: inherit; }
+        .menu-btn { background: rgba(255,255,255,0.03); color: white; border: 1px solid rgba(255,255,255,0.05); padding: 14px 15px; border-radius: 12px; font-size: 1.05rem; text-align: right; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; font-family: inherit; white-space: nowrap; }
         .menu-btn:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
         .menu-btn.active { background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%); border-right: 4px solid var(--accent-color); color: var(--accent-color); font-weight: bold; }
         
