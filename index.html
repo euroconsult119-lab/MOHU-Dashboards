@@ -8,8 +8,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary-color: #005A32;
-            --secondary-color: #003d22;
+            --primary-color: #004543;
+            --secondary-color: #002d2c;
             --accent-color: #d4af37;
             --glass-bg: rgba(255, 255, 255, 0.15);
             --glass-border: rgba(255, 255, 255, 0.2);
@@ -33,37 +33,15 @@
             z-index: 1;
         }
 
-        iframe {
-            width: 100%; height: 100%;
-            border: none;
-            display: none;
-            background: #fff;
-        }
-
+        iframe { width: 100%; height: 100%; border: none; display: none; background: #fff; }
         iframe.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* القائمة الجانبية العائمة */
-        .sidebar-wrapper {
-            position: fixed; top: 0; right: 0; width: 60px; height: 100vh;
-            z-index: 100; display: flex; align-items: center;
-        }
-
-        .sidebar {
-            position: absolute; top: 15px; bottom: 15px; right: -320px; width: 300px;
-            background: rgba(0, 50, 25, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(212, 175, 55, 0.3); border-right: none; border-radius: 20px 0 0 20px;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.6); transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; padding: 20px 0; overflow-y: auto;
-        }
-
+        .sidebar-wrapper { position: fixed; top: 0; right: 0; width: 60px; height: 100vh; z-index: 100; display: flex; align-items: center; }
+        .sidebar { position: absolute; top: 15px; bottom: 15px; right: -320px; width: 300px; background: rgba(0, 69, 67, 0.85); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(212, 175, 55, 0.3); border-right: none; border-radius: 20px 0 0 20px; box-shadow: -10px 0 40px rgba(0,0,0,0.6); transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding: 20px 0; overflow-y: auto; }
         .sidebar-wrapper:hover .sidebar, .sidebar.open { right: 0; }
-
-        .sidebar-hint {
-            position: absolute; right: 0; background: rgba(0, 90, 50, 0.8); color: var(--accent-color);
-            padding: 25px 8px; border-radius: 12px 0 0 12px; display: flex; flex-direction: column;
-            align-items: center; gap: 10px; transition: opacity 0.3s; box-shadow: -2px 0 10px rgba(0,0,0,0.3);
-        }
+        .sidebar-hint { position: absolute; right: 0; background: rgba(0, 69, 67, 0.8); color: var(--accent-color); padding: 25px 8px; border-radius: 12px 0 0 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; transition: opacity 0.3s; box-shadow: -2px 0 10px rgba(0,0,0,0.3); }
         .sidebar-wrapper:hover .sidebar-hint { opacity: 0; pointer-events: none; }
 
         .logo-area { text-align: center; margin-bottom: 20px; padding: 0 20px; }
@@ -72,55 +50,27 @@
         .logo-area p { color: var(--accent-color); font-size: 0.9rem; margin: 0; }
 
         .menu-items { display: flex; flex-direction: column; gap: 12px; padding: 0 15px; flex-grow: 1; }
-
-        .menu-btn {
-            background: rgba(255,255,255,0.03); color: white; border: 1px solid rgba(255,255,255,0.05);
-            padding: 14px 15px; border-radius: 12px; font-size: 1.05rem; text-align: right;
-            display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; font-family: inherit;
-        }
+        .menu-btn { background: rgba(255,255,255,0.03); color: white; border: 1px solid rgba(255,255,255,0.05); padding: 14px 15px; border-radius: 12px; font-size: 1.05rem; text-align: right; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.3s; font-family: inherit; }
         .menu-btn:hover { background: rgba(255,255,255,0.1); transform: translateX(-5px); }
-        .menu-btn.active {
-            background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%);
-            border-right: 4px solid var(--accent-color); color: var(--accent-color); font-weight: bold;
-        }
+        .menu-btn.active { background: linear-gradient(90deg, rgba(212, 175, 55, 0.2) 0%, transparent 100%); border-right: 4px solid var(--accent-color); color: var(--accent-color); font-weight: bold; }
+        
+        .menu-category { color: var(--accent-color); font-size: 0.8rem; margin: 15px 15px 5px 0; opacity: 0.8; font-weight: bold; display: none; }
 
         .user-panel { padding: 15px 20px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 20px; }
         .user-panel p { color: white; margin: 0 0 15px 0; font-size: 0.95rem; }
-        .logout-btn {
-            width: 100%; background: rgba(220, 53, 69, 0.8); color: white; border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: bold; display: flex; justify-content: center; gap: 8px; transition: 0.3s;
-        }
+        .logout-btn { width: 100%; background: rgba(220, 53, 69, 0.8); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 12px; border-radius: 10px; cursor: pointer; font-family: inherit; font-weight: bold; display: flex; justify-content: center; gap: 8px; transition: 0.3s; }
         .logout-btn:hover { background: #dc3545; }
 
-        /* شاشات الإدارة (آدمن + حسابي) */
-        .admin-dashboard {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.85); backdrop-filter: blur(15px);
-            z-index: 50; display: none; justify-content: center; align-items: center;
-        }
+        /* شاشات الإدارة */
+        .admin-dashboard { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(15px); z-index: 50; display: none; justify-content: center; align-items: center; }
         .admin-dashboard.active { display: flex; }
-        
-        .admin-card {
-            background: #fff; width: 750px; border-radius: 20px; padding: 35px;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto;
-            position: relative;
-        }
-        .admin-header-flex {
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 2px solid var(--accent-color); padding-bottom: 15px; margin-bottom: 20px;
-        }
+        .admin-card { background: #fff; width: 750px; border-radius: 20px; padding: 35px; box-shadow: 0 15px 50px rgba(0,0,0,0.5); max-height: 85vh; overflow-y: auto; position: relative; }
+        .admin-header-flex { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--accent-color); padding-bottom: 15px; margin-bottom: 20px; }
         .admin-header-flex h2 { color: var(--primary-color); margin: 0; }
-        .close-admin-btn {
-            background: #f8d7da; color: #dc3545; border: none; border-radius: 50%;
-            width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; transition: 0.3s;
-        }
+        .close-admin-btn { background: #f8d7da; color: #dc3545; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; }
         .close-admin-btn:hover { background: #dc3545; color: white; transform: rotate(90deg); }
         
-        .user-row {
-            display: flex; gap: 12px; margin-bottom: 15px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px solid #e9ecef; transition: 0.3s;
-        }
-        .user-row:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: #ced4da; }
+        .user-row { display: flex; gap: 12px; margin-bottom: 15px; align-items: center; background: #f8f9fa; padding: 15px; border-radius: 12px; border: 1px solid #e9ecef; transition: 0.3s; flex-direction: column; align-items: stretch;}
         .user-row input, .user-row select { padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 0.95rem; }
         .user-row input[type="text"] { flex-grow: 1; font-weight: bold;}
         .save-btn { background: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; display: flex; gap: 5px; align-items: center; }
@@ -128,65 +78,54 @@
         .delete-btn { background: #ffeaea; color: #dc3545; border: 1px solid #ffc6c6; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
         .delete-btn:hover { background: #dc3545; color: white; }
         .add-new-btn { background: var(--accent-color); color: #000; border: none; padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 1.05rem;}
-        .add-new-btn:hover { filter: brightness(0.9); }
+        
+        /* الصلاحيات */
+        .permissions-group { background: #e9ecef; padding: 12px 15px; border-radius: 8px; margin-top: 10px; display: flex; flex-direction: column; gap: 10px; border: 1px solid #ced4da; }
+        .permissions-header { font-weight: bold; color: var(--primary-color); font-size: 0.95rem; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #ccc; padding-bottom: 5px;}
+        .permissions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .permissions-grid label { display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 0.9rem; background: #fff; padding: 8px; border-radius: 6px; border: 1px solid #ddd;}
+        .permissions-grid input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary-color); cursor: pointer; }
 
-        /* شاشة تسجيل الدخول للخلفية */
-        #loginOverlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(-45deg, #005A32, #003d22, #001e0f, #004d2b);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            z-index: 1000; display: flex; justify-content: center; align-items: center; overflow: hidden;
-        }
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        #loginOverlay::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23d4af37" fill-opacity="0.04"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>');
-            z-index: 0; pointer-events: none;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.97); padding: 50px 45px; border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6); width: 380px; text-align: center;
-            border-top: 6px solid var(--accent-color); position: relative; z-index: 1;
-            backdrop-filter: blur(10px);
-        }
+        /* شاشة تسجيل الدخول */
+        #loginOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(-45deg, #004543, #00302e, #001a19, #005451); background-size: 400% 400%; animation: gradientBG 15s ease infinite; z-index: 1000; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        #loginOverlay::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23d4af37" fill-opacity="0.04"><path d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/></g></g></svg>'); z-index: 0; pointer-events: none; }
+        .login-box { background: rgba(255, 255, 255, 0.97); padding: 50px 45px; border-radius: 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); width: 380px; text-align: center; border-top: 6px solid var(--accent-color); position: relative; z-index: 1; backdrop-filter: blur(10px); }
         .login-box img { width: 140px; margin-bottom: 25px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15)); }
         .login-box h2 { color: var(--primary-color); margin-bottom: 8px; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.5px;}
         .login-box p.subtitle { color: #555; margin-bottom: 30px; font-size: 0.95rem; font-weight: 500; line-height: 1.4; }
-        
-        .login-box input {
-            width: 88%; padding: 15px 15px; margin-bottom: 18px; border: 2px solid #e9ecef; border-radius: 10px; font-family: inherit; font-size: 1rem; transition: 0.3s; background: #fdfdfd;
-        }
+        .login-box input { width: 88%; padding: 15px 15px; margin-bottom: 18px; border: 2px solid #e9ecef; border-radius: 10px; font-family: inherit; font-size: 1rem; transition: 0.3s; background: #fdfdfd; }
         .login-box input:focus { outline: none; border-color: var(--primary-color); background: #fff; }
-        .login-box button {
-            width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 1.15rem; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 90, 50, 0.3);
-        }
-        .login-box button:hover { background: var(--secondary-color); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 90, 50, 0.4); }
-        
+        .login-box button { width: 100%; padding: 16px; background: var(--primary-color); color: white; border: none; border-radius: 10px; font-size: 1.15rem; cursor: pointer; font-family: inherit; font-weight: bold; transition: 0.3s; }
         .error-msg { background: #ffeaea; color: #dc3545; padding: 12px; border-radius: 10px; display: none; margin-bottom: 20px; font-weight: bold; font-size: 0.95rem; border: 1px solid #ffc6c6; line-height: 1.5;}
-        .warning-msg { background: #fff8e1; color: #d39e00; border: 1px solid #ffeeba; }
-
         .global-loader { display: none; color: var(--primary-color); margin-top: 20px; font-weight: bold; font-size: 0.95rem; }
-        
-        /* لودر مبدئي فوق الخرائط */
         .iframe-loader { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 5; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; font-size: 1.5rem; font-weight: bold; display: none; }
         .iframe-loader .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.2); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
+
+        /* Toasts & Modals */
+        .toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: white; color: #333; padding: 15px 25px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 12px; font-weight: bold; animation: slideDown 0.3s ease-out; font-size: 0.95rem; }
+        .toast.success { border-bottom: 4px solid #28a745; }
+        .toast.error { border-bottom: 4px solid #dc3545; }
+        @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 10000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .custom-modal { background: white; padding: 35px; border-radius: 20px; width: 400px; max-width: 90%; text-align: center; box-shadow: 0 15px 50px rgba(0,0,0,0.4); animation: popIn 0.3s ease-out;}
+        @keyframes popIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .custom-modal h3 { margin-top: 0; color: var(--primary-color); margin-bottom: 10px; font-size: 1.4rem; }
+        .custom-modal p { color: #555; margin-bottom: 25px; line-height: 1.6; font-size: 1.05rem; }
+        .modal-actions { display: flex; gap: 15px; justify-content: center; }
+        .btn-confirm { background: #dc3545; color: white; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; font-family: inherit; font-size: 1rem; transition: 0.3s; }
+        .btn-cancel { background: #e9ecef; color: #333; border: none; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: bold; flex: 1; font-family: inherit; font-size: 1rem; transition: 0.3s; }
     </style>
 </head>
 <body>
 
-    <!-- شاشة تسجيل الدخول -->
+    <!-- Login Screen -->
     <div id="loginOverlay">
         <div class="login-box">
-            <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار وزارة الحج والعمرة">
+            <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار وزارة الحج">
             <h2>بوابة المشاعر لوزارة الحج والعمرة</h2>
             <p class="subtitle">الخرائط التفاعلية للإدارة العامة للمشاعر المقدسة</p>
-            
             <div id="loginError" class="error-msg">بيانات غير صحيحة</div>
             <input type="text" id="username" placeholder="اسم المستخدم">
             <input type="password" id="password" placeholder="كلمة المرور">
@@ -195,489 +134,299 @@
         </div>
     </div>
 
-    <!-- الحاوية الرئيسية بعد الدخول -->
+    <!-- Main App -->
     <div id="mainApp" style="display: none;">
-        
-        <!-- منطقة الخرائط -->
         <div class="map-container">
             <div class="iframe-loader" id="iframeLoader">
-                <div class="spinner"></div>
-                <div>جاري الاتصال الآمن بمنصة الخرائط...</div>
+                <div class="spinner"></div><div>جاري الاتصال الآمن بمنصة الخرائط...</div>
             </div>
             <iframe id="map_arafat" src="about:blank"></iframe>
             <iframe id="map_mina" src="about:blank"></iframe>
+            <iframe id="map_projects" src="about:blank"></iframe>
+            <iframe id="map_general" src="about:blank"></iframe>
             
-            <!-- لوحة إعدادات الحساب (لجميع المستخدمين) -->
+            <!-- Profile Panel -->
             <div id="profile_panel" class="admin-dashboard">
                 <div class="admin-card" style="width: 500px;">
                     <div class="admin-header-flex">
-                        <h2><i data-lucide="user-cog" style="vertical-align: middle; margin-left: 5px;"></i> إعدادات حسابي</h2>
-                        <button class="close-admin-btn" title="إغلاق والعودة للخريطة" onclick="document.querySelectorAll('.menu-btn')[0].click()">
-                            <i data-lucide="x"></i>
-                        </button>
+                        <h2><i data-lucide="user-cog" style="vertical-align: middle;"></i> إعدادات حسابي</h2>
+                        <button class="close-admin-btn" onclick="closePanels()"><i data-lucide="x"></i></button>
                     </div>
-                    <p style="color: #666; font-size: 0.95rem; margin-bottom: 25px;">يمكنك تعديل اسم المستخدم الخاص بك أو تغيير كلمة المرور لتأمين حسابك.</p>
-                    
                     <div style="display: flex; flex-direction: column; gap: 15px;">
-                        <div>
-                            <label style="display:block; margin-bottom:8px; font-weight:bold; color: var(--primary-color);">اسم المستخدم (تسجيل الدخول):</label>
-                            <input type="text" id="profile_username" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">
-                        </div>
-                        <div>
-                            <label style="display:block; margin-bottom:8px; font-weight:bold; color: var(--primary-color);">كلمة المرور الجديدة:</label>
-                            <input type="text" id="profile_password" placeholder="أدخل كلمة مرور قوية" style="width: 100%; padding: 12px; border: 1px solid #ced4da; border-radius: 8px; font-family: inherit; font-size: 1rem; box-sizing: border-box;">
-                        </div>
-                        <button class="save-btn" id="saveProfileBtn" onclick="updateMyProfile()" style="justify-content: center; margin-top: 15px; width: 100%; font-size: 1.1rem; padding: 14px;">
-                            <i data-lucide="save"></i> حفظ التحديثات
-                        </button>
+                        <div><label>اسم المستخدم:</label><input type="text" id="profile_username" style="width: 100%; padding: 12px; border-radius: 8px;"></div>
+                        <div><label>كلمة المرور الجديدة:</label><input type="text" id="profile_password" style="width: 100%; padding: 12px; border-radius: 8px;"></div>
+                        <button class="save-btn" id="saveProfileBtn" onclick="updateMyProfile()" style="justify-content: center; width: 100%;"><i data-lucide="save"></i> حفظ التحديثات</button>
                     </div>
                 </div>
             </div>
 
-            <!-- لوحة تحكم الآدمن -->
+            <!-- Admin Panel -->
             <div id="admin_panel" class="admin-dashboard">
                 <div class="admin-card">
                     <div class="admin-header-flex">
-                        <h2><i data-lucide="shield-alert" style="vertical-align: middle; margin-left: 5px;"></i> لوحة إدارة الصلاحيات</h2>
-                        <button class="close-admin-btn" title="إغلاق والعودة للخريطة" onclick="document.querySelectorAll('.menu-btn')[0].click()">
-                            <i data-lucide="x"></i>
-                        </button>
+                        <h2><i data-lucide="shield-alert" style="vertical-align: middle;"></i> لوحة إدارة الصلاحيات</h2>
+                        <button class="close-admin-btn" onclick="closePanels()"><i data-lucide="x"></i></button>
                     </div>
-                    <p style="color: #666; font-size: 0.95rem; margin-bottom: 25px;">قم بتعديل، إضافة، أو حذف المستخدمين (سيتم التحديث فوراً في قاعدة البيانات المركزية).</p>
-                    
-                    <div id="usersList">
-                        <div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين...</div>
-                    </div>
-                    
-                    <button class="add-new-btn" onclick="addNewUserRow()"><i data-lucide="user-plus"></i> إضافة مستخدم جديد للنظام</button>
+                    <div id="usersList"><div style="text-align:center;">جاري جلب المستخدمين...</div></div>
+                    <button class="add-new-btn" onclick="addNewUserRow()"><i data-lucide="user-plus"></i> إضافة مستخدم جديد</button>
                 </div>
             </div>
         </div>
 
-        <!-- القائمة الجانبية العائمة -->
+        <!-- Sidebar -->
         <div class="sidebar-wrapper">
-            <div class="sidebar-hint">
-                <i data-lucide="chevron-left"></i>
-                <span style="writing-mode: vertical-rl; font-weight: bold; letter-spacing: 5px;">القائمة</span>
-            </div>
+            <div class="sidebar-hint"><i data-lucide="chevron-left"></i><span style="writing-mode: vertical-rl;">القائمة</span></div>
             <div class="sidebar">
                 <div class="logo-area">
-                    <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75" alt="شعار">
-                    <h2>المركز الموحد</h2>
-                    <p>الإدارة العامة للمشاعر</p>
+                    <img src="https://haj.gov.sa/_next/image?url=https%3A%2F%2Fhaj.gov.sa%2Fs-core%2F-%2Fmedia%2FProject%2FHAJJ%2FHajj-Logos%2FHeader-Logo.svg%3Fiar%3D0%26hash%3DEA30CCD6D55090BA41D3BA548A24E24A&w=256&q=75">
+                    <h2>المركز الموحد</h2><p>الإدارة العامة للمشاعر</p>
                 </div>
 
                 <div class="menu-items">
-                    <button class="menu-btn active" onclick="openScreen('map_arafat', this)">
-                        <i data-lucide="map"></i> خريطة جاهزية عرفات
-                    </button>
-                    <button class="menu-btn" onclick="openScreen('map_mina', this)">
-                        <i data-lucide="map-pin"></i> خريطة جاهزية منى
-                    </button>
+                    <div class="menu-category" id="cat_housing">إسكان الحجاج</div>
+                    <button class="menu-btn" id="btn_map_arafat" onclick="openScreen('map_arafat', this)" style="display: none;"><i data-lucide="map"></i> جاهزية إسكان الحجاج (عرفات) 1447</button>
+                    <button class="menu-btn" id="btn_map_mina" onclick="openScreen('map_mina', this)" style="display: none;"><i data-lucide="map-pin"></i> جاهزية إسكان الحجاج (منى) 1447</button>
+
+                    <div class="menu-category" id="cat_projects">المشاريع التطويرية</div>
+                    <button class="menu-btn" id="btn_map_projects" onclick="openScreen('map_projects', this)" style="display: none;"><i data-lucide="hammer"></i> المشاريع الجارية وجاهزيتها 1447</button>
+
+                    <div class="menu-category" id="cat_general">الإدارة العامة</div>
+                    <button class="menu-btn" id="btn_map_general" onclick="openScreen('map_general', this)" style="display: none;"><i data-lucide="globe"></i> الخريطة التفاعلية للإدارة العامة</button>
                     
                     <hr style="border-color: rgba(255,255,255,0.1); width: 100%; margin: 5px 0;">
-
-                    <!-- زر إعدادات الحساب (متاح للجميع) -->
-                    <button class="menu-btn" onclick="openScreen('profile_panel', this)">
-                        <i data-lucide="user-cog"></i> إعدادات حسابي
-                    </button>
-
-                    <!-- زر الإدارة (للآدمن فقط) -->
-                    <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.4);" onclick="openScreen('admin_panel', this)">
-                        <i data-lucide="users"></i> إدارة المستخدمين
-                    </button>
+                    <button class="menu-btn" onclick="openScreen('profile_panel', this)"><i data-lucide="user-cog"></i> إعدادات حسابي</button>
+                    <button class="menu-btn" id="btnAdmin" style="display: none; background: rgba(0,0,0,0.4);" onclick="openScreen('admin_panel', this)"><i data-lucide="users"></i> إدارة المستخدمين</button>
                 </div>
 
                 <div class="user-panel">
-                    <p><i data-lucide="shield-check" style="width: 16px; height:16px; vertical-align: bottom; color: var(--accent-color);"></i> مرحباً، <b id="displayUser"></b></p>
+                    <p><i data-lucide="shield-check" style="color: var(--accent-color);"></i> مرحباً، <b id="displayUser"></b></p>
                     <button class="logout-btn" onclick="logout(false)"><i data-lucide="log-out"></i> خروج وإنهاء الجلسة</button>
                 </div>
             </div>
         </div>
+    </div>
 
+    <!-- Confirm Modal -->
+    <div id="customConfirmModal" class="custom-modal-overlay">
+        <div class="custom-modal">
+            <h3><i data-lucide="alert-triangle" style="color: #dc3545; width: 45px; height: 45px; display: block; margin: 0 auto 10px;"></i>تأكيد الإجراء</h3>
+            <p id="confirmMessage">هل أنت متأكد؟</p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeConfirm()">إلغاء الأمر</button>
+                <button class="btn-confirm" onclick="executeConfirm()">نعم، متأكد</button>
+            </div>
+        </div>
     </div>
 
     <script>
         lucide.createIcons();
 
+        // ⚠️ روابط الإعدادات ⚠️
         const GOOGLE_APP_URL = "https://script.google.com/macros/s/AKfycbxV6B5n0yy378uPzlte_2gB6JCS-aXUb8ehmL8LcSJeQ3wS4S4po0wEajpe9o1QR9_wkw/exec";
         const URL_ARAFAT = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/ef405727a5444d45846add04c2fe7e3c";
         const URL_MINA = "https://euroconsult-hajj.maps.arcgis.com/apps/dashboards/cdd25be8d0a0411fbf96590836c3bf39";
+        const URL_PROJECTS = "about:blank"; // ضع رابط المشاريع هنا
+        const URL_GENERAL = "about:blank"; // ضع رابط الإدارة العامة هنا
 
         let sessionTimer = null;
         const SESSION_TIMEOUT_MS = 15 * 60 * 1000; 
 
-        // --- نظام المصافحة السرية للإضافة ---
+        // --- Toasts & Modals ---
+        function showToast(msg, type = 'success') {
+            let c = document.getElementById('toastContainer');
+            if(!c) { c = document.createElement('div'); c.id = 'toastContainer'; c.className = 'toast-container'; document.body.appendChild(c); }
+            const t = document.createElement('div'); t.className = `toast ${type}`;
+            t.innerHTML = `<i data-lucide="${type==='success'?'check-circle':'alert-circle'}" style="color:${type==='success'?'#28a745':'#dc3545'}"></i><span>${msg}</span>`;
+            c.appendChild(t); lucide.createIcons({root: t});
+            setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(-30px)'; setTimeout(() => t.remove(), 300); }, 3500);
+        }
+
+        let currentConfirmCallback = null;
+        function showConfirm(msg, callback) { document.getElementById('confirmMessage').innerText = msg; document.getElementById('customConfirmModal').style.display = 'flex'; currentConfirmCallback = callback; }
+        function closeConfirm() { document.getElementById('customConfirmModal').style.display = 'none'; currentConfirmCallback = null; }
+        function executeConfirm() { if(currentConfirmCallback) currentConfirmCallback(); closeConfirm(); }
+
+        // --- Handshake to Extension ---
         setInterval(() => {
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                if(iframe.contentWindow) {
-                    iframe.contentWindow.postMessage("EUROCONSULT_GHOST_2026", "*");
+            const configs = [
+                { id: 'map_arafat', type: 'housing' }, 
+                { id: 'map_mina', type: 'housing' },
+                { id: 'map_projects', type: 'projects' }, 
+                { id: 'map_general', type: 'general' }
+            ];
+            configs.forEach(c => {
+                const iframe = document.getElementById(c.id);
+                if(iframe && iframe.contentWindow) {
+                    iframe.contentWindow.postMessage(JSON.stringify({ secret: "EUROCONSULT_GHOST_2026", dashboard_type: c.type }), "*");
                 }
             });
         }, 1000);
 
-        // --- فحص الجلسة ---
-        document.addEventListener('DOMContentLoaded', () => {
-            checkActiveSession();
-        });
-
+        // --- Session Management ---
+        document.addEventListener('DOMContentLoaded', checkActiveSession);
         function checkActiveSession() {
-            const savedTime = localStorage.getItem('haj_session_time');
-            if (savedTime) {
-                const elapsedTime = Date.now() - parseInt(savedTime);
-                if (elapsedTime < SESSION_TIMEOUT_MS) {
-                    const savedUser = localStorage.getItem('haj_session_user');
-                    const savedRole = localStorage.getItem('haj_session_role');
-                    
-                    if(savedUser && savedRole) {
-                        launchApp(savedUser, savedRole);
-                        const timeRemaining = SESSION_TIMEOUT_MS - elapsedTime;
-                        sessionTimer = setTimeout(() => { logout(true); }, timeRemaining);
-                        return;
-                    }
-                } else {
-                    logout(true);
-                    return;
-                }
-            }
+            const t = localStorage.getItem('haj_session_time');
+            if(t && (Date.now() - parseInt(t) < SESSION_TIMEOUT_MS)) {
+                const u = localStorage.getItem('haj_session_user'), r = localStorage.getItem('haj_session_role'), p = localStorage.getItem('haj_session_perms');
+                if(u && r) { launchApp(u, r, p); sessionTimer = setTimeout(() => logout(true), SESSION_TIMEOUT_MS - (Date.now() - parseInt(t))); return; }
+            } else if(t) { logout(true); return; }
             document.getElementById('loginOverlay').style.display = 'flex';
         }
 
-        // --- جميع الاتصالات تم تحويلها إلى POST لتخطي مشاكل الـ CORS بالكامل ---
         async function login() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const btn = document.getElementById('loginBtn');
-            const loader = document.getElementById('loginLoader');
-            const err = document.getElementById('loginError');
-
+            const user = document.getElementById('username').value, pass = document.getElementById('password').value;
+            const btn = document.getElementById('loginBtn'), loader = document.getElementById('loginLoader'), err = document.getElementById('loginError');
             if(!user || !pass) return;
-
-            btn.style.display = 'none';
-            loader.style.display = 'block';
-            err.style.display = 'none';
-            err.className = 'error-msg'; 
-
+            btn.style.display = 'none'; loader.style.display = 'block'; err.style.display = 'none';
             try {
-                // استخدام POST بدون headers لتجنب حظر الـ CORS Preflight
-                const response = await fetch(GOOGLE_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'login', username: user, password: pass })
-                });
-                
-                const textResponse = await response.text();
-                try {
-                    const data = JSON.parse(textResponse);
-                    if (data.status === 'success') {
-                        localStorage.setItem('haj_session_user', data.username);
-                        localStorage.setItem('haj_session_role', data.role);
-                        localStorage.setItem('haj_session_time', Date.now());
-
-                        clearTimeout(sessionTimer);
-                        sessionTimer = setTimeout(() => { logout(true); }, SESSION_TIMEOUT_MS);
-
-                        launchApp(data.username, data.role);
-                    } else {
-                        err.innerHTML = data.message || "بيانات غير صحيحة";
-                        err.style.display = 'block';
-                    }
-                } catch (parseError) {
-                    console.error("الرد الأصلي من جوجل السيرفر:", textResponse);
-                    err.innerHTML = "فشل في قراءة البيانات. يرجى التأكد من نشر تطبيق جوجل سكريبت بصلاحية (Anyone).";
-                    err.style.display = 'block';
-                }
-            } catch (error) {
-                console.error("Network Error:", error);
-                err.innerHTML = `حدث خطأ في الاتصال بالشبكة.`;
-                err.style.display = 'block';
-            }
-
-            btn.style.display = 'block';
-            loader.style.display = 'none';
+                const res = await fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'login', username: user, password: pass }) });
+                const data = JSON.parse(await res.text());
+                if (data.status === 'success') {
+                    localStorage.setItem('haj_session_user', data.username); localStorage.setItem('haj_session_role', data.role);
+                    localStorage.setItem('haj_session_perms', data.permissions || ''); localStorage.setItem('haj_session_time', Date.now());
+                    clearTimeout(sessionTimer); sessionTimer = setTimeout(() => logout(true), SESSION_TIMEOUT_MS);
+                    launchApp(data.username, data.role, data.permissions || ''); showToast("تم الدخول بنجاح", "success");
+                } else { err.innerHTML = data.message || "بيانات غير صحيحة"; err.style.display = 'block'; }
+            } catch(e) { err.innerHTML = "خطأ في الاتصال بالسيرفر"; err.style.display = 'block'; }
+            btn.style.display = 'block'; loader.style.display = 'none';
         }
 
-        function launchApp(username, role) {
+        function launchApp(username, role, permissions) {
             document.getElementById('displayUser').innerText = username;
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
-            
             document.getElementById('profile_username').value = username;
-            document.getElementById('profile_password').value = ""; 
+            
+            const maps = ['arafat', 'mina', 'projects', 'general'];
+            maps.forEach(m => document.getElementById('btn_map_' + m).style.display = 'none');
+            ['housing', 'projects', 'general'].forEach(c => document.getElementById('cat_' + c).style.display = 'none');
+            
+            let firstScreen = 'profile_panel';
+            const perms = role === 'admin' ? maps : (permissions ? permissions.split(',') : []);
 
-            if(role === 'admin') {
-                document.getElementById('btnAdmin').style.display = 'flex';
-                loadUsersFromSheet();
-            } else {
-                document.getElementById('btnAdmin').style.display = 'none';
+            if(perms.includes('arafat') || perms.includes('mina')) {
+                document.getElementById('cat_housing').style.display = 'block';
+                if(perms.includes('arafat')) { document.getElementById('btn_map_arafat').style.display = 'flex'; if(firstScreen==='profile_panel') firstScreen='map_arafat'; }
+                if(perms.includes('mina')) { document.getElementById('btn_map_mina').style.display = 'flex'; if(firstScreen==='profile_panel') firstScreen='map_mina'; }
             }
+            if(perms.includes('projects')) { document.getElementById('cat_projects').style.display = 'block'; document.getElementById('btn_map_projects').style.display = 'flex'; if(firstScreen==='profile_panel') firstScreen='map_projects'; }
+            if(perms.includes('general')) { document.getElementById('cat_general').style.display = 'block'; document.getElementById('btn_map_general').style.display = 'flex'; if(firstScreen==='profile_panel') firstScreen='map_general'; }
+
+            if(role === 'admin') { document.getElementById('btnAdmin').style.display = 'flex'; loadUsersFromSheet(); } 
+            else { document.getElementById('btnAdmin').style.display = 'none'; }
 
             loadIframes();
+            setTimeout(() => openScreen(firstScreen, document.getElementById('btn_' + firstScreen)), 100);
         }
 
         function loadIframes() {
             document.getElementById('iframeLoader').style.display = 'flex';
-            const iframeArafat = document.getElementById('map_arafat');
-            const iframeMina = document.getElementById('map_mina');
-
-            iframeArafat.src = URL_ARAFAT;
-            iframeMina.src = URL_MINA;
-            iframeArafat.classList.add('active');
-
-            setTimeout(() => { document.getElementById('iframeLoader').style.display = 'none'; }, 4000);
+            document.getElementById('map_arafat').src = URL_ARAFAT;
+            document.getElementById('map_mina').src = URL_MINA;
+            document.getElementById('map_projects').src = URL_PROJECTS;
+            document.getElementById('map_general').src = URL_GENERAL;
+            setTimeout(() => document.getElementById('iframeLoader').style.display = 'none', 4000);
         }
 
-        function logout(isSessionExpired = false) {
-            localStorage.removeItem('haj_session_user');
-            localStorage.removeItem('haj_session_role');
-            localStorage.removeItem('haj_session_time');
-            clearTimeout(sessionTimer);
-
+        function logout(isExp = false) {
+            localStorage.clear(); clearTimeout(sessionTimer);
             document.getElementById('mainApp').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
             document.getElementById('password').value = '';
-            
-            document.getElementById('map_arafat').src = "about:blank";
-            document.getElementById('map_mina').src = "about:blank";
-
+            ['arafat', 'mina', 'projects', 'general'].forEach(m => document.getElementById('map_'+m).src = 'about:blank');
             const err = document.getElementById('loginError');
-            if (isSessionExpired) {
-                err.className = 'error-msg warning-msg';
-                err.innerText = "⏳ انتهت صلاحية الجلسة (15 دقيقة). يرجى تسجيل الدخول مجدداً لحماية البيانات.";
-                err.style.display = 'block';
-            } else {
-                err.style.display = 'none';
-            }
+            if(isExp) { err.className = 'error-msg warning-msg'; err.innerText = "⏳ انتهت الجلسة. يرجى الدخول مجدداً."; err.style.display = 'block'; }
+            else { err.style.display = 'none'; }
         }
 
-        function openScreen(screenId, btnObj) {
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            if(btnObj) btnObj.classList.add('active');
-
-            document.getElementById('map_arafat').classList.remove('active');
-            document.getElementById('map_mina').classList.remove('active');
-            document.getElementById('admin_panel').classList.remove('active');
+        function closePanels() {
             document.getElementById('profile_panel').classList.remove('active');
-
-            document.getElementById(screenId).classList.add('active');
-            
-            if(screenId !== 'admin_panel' && screenId !== 'profile_panel' && lucide) {
-                lucide.createIcons();
-            }
+            document.getElementById('admin_panel').classList.remove('active');
         }
 
-        // --- تحديث إعدادات حسابي ---
-        async function updateMyProfile() {
-            const newUsername = document.getElementById('profile_username').value.trim();
-            const newPassword = document.getElementById('profile_password').value.trim();
-            const oldUsername = localStorage.getItem('haj_session_user');
-            const role = localStorage.getItem('haj_session_role');
-
-            if(!newUsername || !newPassword) { 
-                alert("يرجى إدخال اسم المستخدم وكلمة المرور الجديدة!"); 
-                return; 
-            }
-            if(oldUsername === 'admin' && newUsername !== 'admin') {
-                alert("لا يمكن تغيير اسم المستخدم الخاص بالآدمن الأساسي للحفاظ على استقرار النظام!");
-                document.getElementById('profile_username').value = 'admin';
-                return;
-            }
-
-            const btn = document.getElementById('saveProfileBtn');
-            const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<i data-lucide="loader" class="spinner"></i> جاري الحفظ...`;
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(GOOGLE_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'updateProfile', oldUsername: oldUsername, newUsername: newUsername, newPassword: newPassword, role: role })
-                });
-                
-                const textResponse = await response.text();
-                try {
-                    const data = JSON.parse(textResponse);
-                    if(data.status === 'success') {
-                        btn.innerHTML = `<i data-lucide="check"></i> تم التحديث بنجاح`;
-                        btn.style.background = "#28a745";
-                        
-                        localStorage.setItem('haj_session_user', newUsername);
-                        document.getElementById('displayUser').innerText = newUsername;
-
-                        setTimeout(() => {
-                            btn.innerHTML = originalHTML;
-                            btn.style.background = "var(--primary-color)";
-                            btn.disabled = false;
-                            lucide.createIcons();
-                        }, 2000);
-                    } else {
-                        alert(data.message || "حدث خطأ أثناء الحفظ!");
-                        btn.innerHTML = originalHTML;
-                        btn.disabled = false;
-                        lucide.createIcons();
-                    }
-                } catch (parseError) {
-                    alert("خطأ في الاتصال بالسيرفر.");
-                    btn.innerHTML = originalHTML;
-                    btn.disabled = false;
-                    lucide.createIcons();
-                }
-            } catch (e) {
-                alert("خطأ في الشبكة (CORS)");
-                btn.innerHTML = originalHTML;
-                btn.disabled = false;
-                lucide.createIcons();
-            }
+        function openScreen(id, btn) {
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            if(btn) btn.classList.add('active');
+            ['map_arafat', 'map_mina', 'map_projects', 'map_general', 'admin_panel', 'profile_panel'].forEach(x => document.getElementById(x).classList.remove('active'));
+            if(document.getElementById(id)) document.getElementById(id).classList.add('active');
         }
 
-        // --- إدارة حسابات المستخدمين (الآدمن) ---
+        // --- Admin Functions ---
         async function loadUsersFromSheet() {
-            const listDiv = document.getElementById('usersList');
-            listDiv.innerHTML = '<div style="text-align:center; padding: 20px; font-weight: bold; color: var(--primary-color);">جاري جلب المستخدمين من قاعدة البيانات...</div>';
+            const l = document.getElementById('usersList'); l.innerHTML = '<div style="text-align:center;">جاري الجلب...</div>';
             try {
-                const response = await fetch(GOOGLE_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'getUsers' })
-                });
-                const textResponse = await response.text();
-                try {
-                    const data = JSON.parse(textResponse);
-                    if(data.status === 'success') {
-                        listDiv.innerHTML = '';
-                        data.data.forEach(u => renderUserRow(u.username, u.password, u.role, listDiv));
-                        lucide.createIcons();
-                    }
-                } catch (parseError) {
-                    listDiv.innerHTML = '<p style="color:red; text-align:center; font-weight:bold;">حدث خطأ أثناء قراءة البيانات من جوجل</p>';
-                }
-            } catch (e) {
-                listDiv.innerHTML = '<p style="color:red; text-align:center; font-weight:bold;">حدث خطأ في الاتصال بالشبكة (CORS)</p>';
-            }
+                const res = await fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'getUsers' }) });
+                const data = JSON.parse(await res.text());
+                if(data.status === 'success') { l.innerHTML = ''; data.data.forEach(u => renderUserRow(u.username, u.password, u.role, u.permissions||'', l)); lucide.createIcons(); }
+            } catch(e) { l.innerHTML = '<p style="color:red; text-align:center;">خطأ في الاتصال</p>'; }
         }
 
-        function renderUserRow(user, pass, role, container) {
-            const row = document.createElement('div');
-            row.className = 'user-row';
-            const isAdmin = user === 'admin';
-            
+        function renderUserRow(u, p, r, perms, cont) {
+            const row = document.createElement('div'); row.className = 'user-row'; const isA = u === 'admin'; const arr = perms ? perms.split(',') : [];
             row.innerHTML = `
-                <input type="text" value="${user}" placeholder="اسم المستخدم" ${isAdmin ? 'readonly title="لا يمكن تغيير اسم الآدمن الأساسي"' : ''} style="background: ${isAdmin ? '#e9ecef': '#fff'}; width: 30%;">
-                <input type="text" value="${pass}" placeholder="كلمة المرور الجديدة" style="width: 30%;">
-                <select ${isAdmin ? 'disabled' : ''} style="flex-grow: 1;">
-                    <option value="user" ${role !== 'admin' ? 'selected' : ''}>مستخدم عادي</option>
-                    <option value="admin" ${role === 'admin' ? 'selected' : ''}>مدير نظام</option>
-                </select>
-                <button class="save-btn" title="حفظ التعديلات" onclick="saveUserToSheet(this)"><i data-lucide="save"></i></button>
-                ${!isAdmin ? `<button class="delete-btn" title="حذف هذا المستخدم" onclick="deleteUserFromSheet(this)"><i data-lucide="trash-2"></i></button>` : `<div style="width:44px;"></div>`}
-            `;
-            container.appendChild(row);
+                <div style="display: flex; gap: 12px; width: 100%;">
+                    <input type="text" value="${u}" ${isA?'readonly':''} style="background:${isA?'#e9ecef':'#fff'}; width:30%;">
+                    <input type="text" value="${p}" placeholder="كلمة المرور" style="width:30%;">
+                    <select ${isA?'disabled':''} style="flex-grow:1;"><option value="user" ${r!=='admin'?'selected':''}>مستخدم</option><option value="admin" ${r==='admin'?'selected':''}>مدير</option></select>
+                    <button class="save-btn" onclick="saveUserToSheet(this)"><i data-lucide="save"></i></button>
+                    ${!isA ? `<button class="delete-btn" onclick="deleteUserFromSheet(this)"><i data-lucide="trash-2"></i></button>` : `<div style="width:44px;"></div>`}
+                </div>
+                <div class="permissions-group">
+                    <div class="permissions-header"><i data-lucide="shield"></i> الصلاحيات الممنوحة:</div>
+                    <div class="permissions-grid">
+                        <label><input type="checkbox" class="chk-perm" value="arafat" ${arr.includes('arafat')||isA?'checked':''} ${isA?'disabled':''}> إسكان الحجاج (عرفات)</label>
+                        <label><input type="checkbox" class="chk-perm" value="mina" ${arr.includes('mina')||isA?'checked':''} ${isA?'disabled':''}> إسكان الحجاج (منى)</label>
+                        <label><input type="checkbox" class="chk-perm" value="projects" ${arr.includes('projects')||isA?'checked':''} ${isA?'disabled':''}> المشاريع التطويرية</label>
+                        <label><input type="checkbox" class="chk-perm" value="general" ${arr.includes('general')||isA?'checked':''} ${isA?'disabled':''}> الإدارة العامة</label>
+                    </div>
+                </div>`;
+            cont.appendChild(row);
         }
 
-        function addNewUserRow() {
-            const listDiv = document.getElementById('usersList');
-            renderUserRow('', '', 'user', listDiv);
-            lucide.createIcons();
-            listDiv.lastElementChild.scrollIntoView({ behavior: 'smooth' });
-        }
+        function addNewUserRow() { const l = document.getElementById('usersList'); renderUserRow('','','user','',l); lucide.createIcons(); l.lastElementChild.scrollIntoView(); }
 
-        async function saveUserToSheet(btnElement) {
-            const row = btnElement.parentElement;
-            const user = row.children[0].value.trim();
-            const pass = row.children[1].value.trim();
-            const role = row.children[2].value;
-
-            if(!user || !pass) { alert("يرجى إدخال اسم مستخدم وكلمة مرور صالحة"); return; }
-
-            const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = `<i data-lucide="loader" class="spinner"></i>`;
-            btnElement.disabled = true;
-
+        async function saveUserToSheet(btn) {
+            const w = btn.parentElement.parentElement, inputs = btn.parentElement;
+            const u = inputs.children[0].value.trim(), p = inputs.children[1].value.trim(), r = inputs.children[2].value;
+            const cbs = w.querySelectorAll('.chk-perm:checked'), perms = Array.from(cbs).map(c=>c.value).join(',');
+            if(!u || !p) { showToast("يرجى إدخال البيانات", "error"); return; }
+            const html = btn.innerHTML; btn.innerHTML = `<i data-lucide="loader" class="spinner"></i>`; btn.disabled = true;
             try {
-                const response = await fetch(GOOGLE_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'saveUser', username: user, password: pass, role: role })
-                });
-                const textResponse = await response.text();
-                try {
-                    const data = JSON.parse(textResponse);
-                    if(data.status === 'success') {
-                        btnElement.innerHTML = `<i data-lucide="check"></i>`;
-                        btnElement.style.background = "#28a745";
-                        setTimeout(() => {
-                            btnElement.innerHTML = originalHTML;
-                            btnElement.style.background = "var(--primary-color)";
-                            btnElement.disabled = false;
-                            lucide.createIcons();
-                        }, 2000);
-                    } else {
-                        alert("حدث خطأ أثناء الحفظ!");
-                        btnElement.innerHTML = originalHTML;
-                        btnElement.disabled = false;
-                        lucide.createIcons();
-                    }
-                } catch(parseError) {
-                    alert("خطأ في الاتصال بجوجل شيت.");
-                    btnElement.innerHTML = originalHTML;
-                    btnElement.disabled = false;
-                    lucide.createIcons();
-                }
-            } catch (e) {
-                alert("خطأ في الشبكة (CORS)!");
-                btnElement.innerHTML = originalHTML;
-                btnElement.disabled = false;
-                lucide.createIcons();
-            }
+                const res = await fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'saveUser', username: u, password: p, role: r, permissions: perms }) });
+                if(JSON.parse(await res.text()).status === 'success') { btn.innerHTML = `<i data-lucide="check"></i>`; btn.style.background = "#28a745"; showToast("تم الحفظ بنجاح", "success"); }
+                else showToast("حدث خطأ", "error");
+            } catch(e) { showToast("خطأ اتصال", "error"); }
+            setTimeout(() => { btn.innerHTML = html; btn.style.background = "var(--primary-color)"; btn.disabled = false; lucide.createIcons(); }, 2000);
         }
 
-        async function deleteUserFromSheet(btnElement) {
-            const row = btnElement.parentElement;
-            const user = row.children[0].value.trim();
+        function deleteUserFromSheet(btn) {
+            const row = btn.parentElement.parentElement, u = btn.parentElement.children[0].value.trim();
+            if(!u) { row.remove(); return; }
+            showConfirm(`متأكد من حذف ${u} نهائياً؟`, async () => {
+                btn.innerHTML = `<i data-lucide="loader" class="spinner"></i>`; btn.disabled = true;
+                try {
+                    const res = await fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteUser', username: u }) });
+                    if(JSON.parse(await res.text()).status === 'success') { row.style.opacity = '0'; setTimeout(()=>row.remove(), 300); showToast("تم الحذف بنجاح", "success"); }
+                } catch(e) { showToast("خطأ اتصال", "error"); btn.disabled = false; }
+            });
+        }
 
-            if(!user) { row.remove(); return; }
-
-            if(!confirm(`هل أنت متأكد من حذف المستخدم (${user}) نهائياً؟`)) return;
-
-            const originalHTML = btnElement.innerHTML;
-            btnElement.innerHTML = `<i data-lucide="loader" class="spinner"></i>`;
-            btnElement.disabled = true;
-
+        async function updateMyProfile() {
+            const nU = document.getElementById('profile_username').value.trim(), nP = document.getElementById('profile_password').value.trim();
+            const oU = localStorage.getItem('haj_session_user'), r = localStorage.getItem('haj_session_role');
+            if(!nU || !nP) { showToast("أدخل البيانات بشكل صحيح", "error"); return; }
+            const btn = document.getElementById('saveProfileBtn'), html = btn.innerHTML; btn.innerHTML = `<i data-lucide="loader" class="spinner"></i>`; btn.disabled = true;
             try {
-                const response = await fetch(GOOGLE_APP_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'deleteUser', username: user })
-                });
-                const textResponse = await response.text();
-                try {
-                    const data = JSON.parse(textResponse);
-                    if(data.status === 'success') {
-                        row.style.opacity = '0';
-                        setTimeout(() => row.remove(), 300);
-                    } else {
-                        alert("حدث خطأ أثناء الحذف!");
-                        btnElement.innerHTML = originalHTML;
-                        btnElement.disabled = false;
-                        lucide.createIcons();
-                    }
-                } catch (parseError) {
-                    alert("خطأ في الاتصال بجوجل شيت.");
-                    btnElement.innerHTML = originalHTML;
-                    btnElement.disabled = false;
-                    lucide.createIcons();
-                }
-            } catch (e) {
-                alert("فشل في الاتصال بالشبكة!");
-                btnElement.innerHTML = originalHTML;
-                btnElement.disabled = false;
-                lucide.createIcons();
-            }
+                const res = await fetch(GOOGLE_APP_URL, { method: 'POST', body: JSON.stringify({ action: 'updateProfile', oldUsername: oU, newUsername: nU, newPassword: nP, role: r }) });
+                if(JSON.parse(await res.text()).status === 'success') {
+                    localStorage.setItem('haj_session_user', nU); document.getElementById('displayUser').innerText = nU;
+                    btn.innerHTML = `<i data-lucide="check"></i>`; btn.style.background = "#28a745"; showToast("تم التحديث بنجاح", "success");
+                } else showToast("اسم المستخدم مسجل مسبقاً", "error");
+            } catch(e) { showToast("خطأ اتصال", "error"); }
+            setTimeout(() => { btn.innerHTML = html; btn.style.background = "var(--primary-color)"; btn.disabled = false; lucide.createIcons(); }, 2000);
         }
-        
-        document.getElementById("password").addEventListener("keypress", function(event) {
-          if (event.key === "Enter") {
-            event.preventDefault();
-            document.getElementById("loginBtn").click();
-          }
-        });
+
+        document.getElementById("password").addEventListener("keypress", e => { if(e.key === "Enter") { e.preventDefault(); document.getElementById("loginBtn").click(); } });
     </script>
 </body>
 </html>
